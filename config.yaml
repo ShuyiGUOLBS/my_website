@@ -106,7 +106,7 @@ params:
      #   url: blogs/ipsum
   two:
     buttonText: Get Started
-    enable: yes
+    enable: no
     subtitle: "Feel free to get in touch with me via different contacts below. I really love to make more friends here in the 
       the UK. Looking forward to chat about everything from professional life to personal life."
     title: Connect with me!
