@@ -1,6 +1,6 @@
-baseURL: http://example.org/
+baseURL: https://shuyiguoportfolio.netlify.app/
 languageCode: en-us
-title: Portfolio website
+title: Portfolio website for Shuyi Guo
 theme: forty
 googleAnalytics: ''
 disqusShortname: ''
@@ -15,7 +15,7 @@ params:
   contact:
     address:
       - city: London, ST 00000
-        country: Country
+        country: United Kingdom 
         street: Street
         title: Address
     buttonClear: Clear
@@ -42,21 +42,21 @@ params:
         text: 'Design: '
         url: https://www.html5up.net
     social: 
-      - icon: fa-twitter
-        label: Twitter
-        url: https://www.twitter.com
-      - icon: fa-facebook
-        label: Facebook
-        url: https://www.facebook.com
-      - icon: fa-instagram
-        label: Instagram
-        url: https://www.instagram.com
+     # - icon: fa-twitter
+     #   label: Twitter
+     #   url: https://www.twitter.com
+    #  - icon: fa-facebook
+     #   label: Facebook
+      #  url: https://www.facebook.com
+    #  - icon: fa-instagram
+    #    label: Instagram
+    #    url: https://www.instagram.com
       - icon: fa-github
         label: GitHub
-        url: https://www.github.com
+        url: https://github.com/ShuyiGUOLBS
       - icon: fa-linkedin
         label: LinkedIn
-        url: https://www.linkedin.com
+        url: https://www.linkedin.com/in/shu-yi-guo-7709a0152
   image: ''
   name: Your name
   navigation:
@@ -88,7 +88,7 @@ params:
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
         title: Risk Return of DJIA
-        url: blogs/risk_return
+        url: blogs/risk_return #link the "slug"
       - image: pic03.jpg
         subtitle: Lorem Etiam Nullam
         title: Magna
