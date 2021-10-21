@@ -1,6 +1,6 @@
 ---
-title: "Session 2: Homework 1"
-author: "Lindsey Zastawny, Danqing Huang, Aneta Gajdzinska, Shuyi Guo, Gautam Sreekumar, Lukas Kugler"
+title: "My First Codes"
+author: "Shuyi Guo"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -11,6 +11,7 @@ output:
     toc_float: yes
     code_folding: show
 slug: first
+title: My First Codes
 ---
 
 ```{r, setup, echo=FALSE}
