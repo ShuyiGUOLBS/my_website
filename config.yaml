@@ -100,10 +100,10 @@ params:
         subtitle: Hypothesis testing
         title: My Second Codes
         url: blogs/second
-   #   - image: pic06.jpg
-    #    subtitle: Feugiat Amet Tempus
-    #    title: Etiam
-     #   url: blogs/ipsum
+      - image: Sunset.jpg
+        subtitle: Stay hungry for everything fancy and exciting
+        title: More to Expect
+        url: blogs/ending
   two:
     buttonText: Get Started
     enable: yes  
