@@ -8,8 +8,9 @@ description: Nullam et orci eu lorem consequat tincidunt vivamus et sagittis mag
   sed magna lacinia magna pellentesque lorem ipsum dolor. Nullam et orci eu lorem
   consequat tincidunt. Vivamus et sagittis tempus.
 draft: false
-image: pic08.jpg
+image: basketball.jpg
 keywords: ""
-slug: tempus
-title: Tempus
+slug: my_hobbies
+title: My Hobbies
 ---
+I love to play basketball, badminton and squash. Also, I am a big fun of video games and I'm a pro in moba games. 

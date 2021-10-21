@@ -8,8 +8,7 @@ params:
   banner:
     buttonText: Get Started
     subtitle: |-
-      A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-      AND RELEASED UNDER THE CREATIVE COMMONS.
+      An LBS Student Majoring in Masters in Financial Analysis.
     title: Hi, my name is Shuyi GUO
   blog: {}
   contact:
@@ -82,37 +81,33 @@ params:
     enable: yes
     showcase:
       - image: lbs.jpg
-        subtitle: Ipsum Dolor Sit Amet
+        subtitle: Find out more about Shuyi
         title: About me
-        url: blogs/risk_return
-      - image: pic02.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Risk Return of DJIA
-        url: blogs/risk_return #link the "slug"
-      - image: pic03.jpg
-        subtitle: Lorem Etiam Nullam
-        title: Magna
-        url: blogs/magna
-      - image: pic04.jpg
-        subtitle: Nisl Sed Aliquam
-        title: Ipsum
-        url: blogs/ipsum
-      - image: pic05.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Consequat
-        url: blogs/ipsum
-      - image: pic06.jpg
-        subtitle: Feugiat Amet Tempus
-        title: Etiam
-        url: blogs/ipsum
+        url: blogs/self_intro
+      - image: Wall_Street.jpg
+        subtitle: Banking and Finance
+        title: My Career Aspiration
+        url: blogs/career #link the "slug"
+      - image: Player.jpg
+        subtitle: sports and gaming
+        title: My Hobbies
+        url: blogs/my_hobbies
+      - image: Coding.jpg
+        subtitle: EDA and Visualization
+        title: My First Codes
+        url: blogs/first
+      - image: imm-statistic.jpg
+        subtitle: Hypothesis testing
+        title: My Second Codes
+        url: blogs/second
+   #   - image: pic06.jpg
+    #    subtitle: Feugiat Amet Tempus
+    #    title: Etiam
+     #   url: blogs/ipsum
   two:
     buttonText: Get Started
     enable: yes
-    subtitle: "Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero.
-      \n    Mauris aliquet magna magna sed nunc rhoncus pharetra. \n    Pellentesque
-      condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia
-      pellentesque lorem ipsum dolor. \n    Nullam et orci eu lorem consequat tincidunt.
-      Vivamus et sagittis libero.\n    Mauris aliquet magna magna sed nunc rhoncus
-      amet pharetra et feugiat tempus."
-    title: Massa libero
+    subtitle: "Feel free to get in touch with me via different contacts below. I really love to make more friends here in the 
+      the UK. Looking forward to chat about everything from professional life to personal life."
+    title: Connect with me!
     url: blogs

@@ -1,0 +1,376 @@
+---
+title: "Session 2: Homework 1"
+author: "Lindsey Zastawny, Danqing Huang, Aneta Gajdzinska, Shuyi Guo, Gautam Sreekumar, Lukas Kugler"
+date: "2021-10-21"
+output:
+  html_document:
+    theme: flatly
+    highlight: zenburn
+    number_sections: yes
+    toc: yes
+    toc_float: yes
+    code_folding: show
+slug: first
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="analysis-of-movies--imdb-dataset" class="section level1">
+<h1>Analysis of Movies- IMDB dataset</h1>
+<p>We will look at a subset sample of movies, taken from the <a href="https://www.kaggle.com/carolzhangdc/imdb-5000-movie-dataset">Kaggle IMDB 5000 movie dataset</a>.</p>
+<pre class="r"><code>movies &lt;- read_csv(here::here(&quot;data&quot;, &quot;movies.csv&quot;))
+glimpse(movies)</code></pre>
+<pre><code>## Rows: 2,961
+## Columns: 11
+## $ title               &lt;chr&gt; &quot;Avatar&quot;, &quot;Titanic&quot;, &quot;Jurassic World&quot;, &quot;The Avenge…
+## $ genre               &lt;chr&gt; &quot;Action&quot;, &quot;Drama&quot;, &quot;Action&quot;, &quot;Action&quot;, &quot;Action&quot;, &quot;…
+## $ director            &lt;chr&gt; &quot;James Cameron&quot;, &quot;James Cameron&quot;, &quot;Colin Trevorrow…
+## $ year                &lt;dbl&gt; 2009, 1997, 2015, 2012, 2008, 1999, 1977, 2015, 20…
+## $ duration            &lt;dbl&gt; 178, 194, 124, 173, 152, 136, 125, 141, 164, 93, 1…
+## $ gross               &lt;dbl&gt; 7.61e+08, 6.59e+08, 6.52e+08, 6.23e+08, 5.33e+08, …
+## $ budget              &lt;dbl&gt; 2.37e+08, 2.00e+08, 1.50e+08, 2.20e+08, 1.85e+08, …
+## $ cast_facebook_likes &lt;dbl&gt; 4834, 45223, 8458, 87697, 57802, 37723, 13485, 920…
+## $ votes               &lt;dbl&gt; 886204, 793059, 418214, 995415, 1676169, 534658, 9…
+## $ reviews             &lt;dbl&gt; 3777, 2843, 1934, 2425, 5312, 3917, 1752, 1752, 35…
+## $ rating              &lt;dbl&gt; 7.9, 7.7, 7.0, 8.1, 9.0, 6.5, 8.7, 7.5, 8.5, 7.2, …</code></pre>
+<div id="use-your-data-import-inspection-and-cleaning-skills-to-answer-the-following" class="section level2">
+<h2>Use your data import, inspection, and cleaning skills to answer the following:</h2>
+<ul>
+<li>Are there any missing values (NAs)? Are all entries distinct or are there duplicate entries?</li>
+</ul>
+<p>While it does not appear that there were any missing values in the dataset, it does appear as though there were duplicate entries. This is because in the original dataset above,there were 2,961 rows of data. After removing potential duplicates by the distinct identifier “Title”, there are now only 2,907 rows of data, suggesting that duplicate movie titles had been within the data. When further observing the raw data, the movie titles that were duplicated only differed in the “votes” category. This may be because the data was updated at a later date, and the original entry was not removed.</p>
+<pre class="r"><code>#Search for missing values (NAs)
+sum(is.na(movies)) #Does not appear there are any missing values</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>#Search for duplicate entries based on title
+sum(duplicated(movies$title))</code></pre>
+<pre><code>## [1] 54</code></pre>
+<pre class="r"><code>#Remove duplicate rows based on Title (distinct identifier)
+movies %&gt;% 
+  distinct(title, .keep_all = TRUE)</code></pre>
+<pre><code>## # A tibble: 2,907 × 11
+##    title    genre  director  year duration  gross budget cast_facebook_l…  votes
+##    &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Avatar   Action James C…  2009      178 7.61e8 2.37e8             4834 8.86e5
+##  2 Titanic  Drama  James C…  1997      194 6.59e8 2   e8            45223 7.93e5
+##  3 Jurassi… Action Colin T…  2015      124 6.52e8 1.5 e8             8458 4.18e5
+##  4 The Ave… Action Joss Wh…  2012      173 6.23e8 2.2 e8            87697 9.95e5
+##  5 The Dar… Action Christo…  2008      152 5.33e8 1.85e8            57802 1.68e6
+##  6 Star Wa… Action George …  1999      136 4.75e8 1.15e8            37723 5.35e5
+##  7 Star Wa… Action George …  1977      125 4.61e8 1.1 e7            13485 9.11e5
+##  8 Avenger… Action Joss Wh…  2015      141 4.59e8 2.5 e8            92000 4.63e5
+##  9 The Dar… Action Christo…  2012      164 4.48e8 2.5 e8           106759 1.14e6
+## 10 Shrek 2  Adven… Andrew …  2004       93 4.36e8 1.5 e8             1148 3.15e5
+## # … with 2,897 more rows, and 2 more variables: reviews &lt;dbl&gt;, rating &lt;dbl&gt;</code></pre>
+<pre class="r"><code>#Create table of movie genres
+movies %&gt;%
+    group_by(genre) %&gt;% #group by genre
+    count(sort=TRUE) #rank by descending order</code></pre>
+<pre><code>## # A tibble: 17 × 2
+## # Groups:   genre [17]
+##    genre           n
+##    &lt;chr&gt;       &lt;int&gt;
+##  1 Comedy        848
+##  2 Action        738
+##  3 Drama         498
+##  4 Adventure     288
+##  5 Crime         202
+##  6 Biography     135
+##  7 Horror        131
+##  8 Animation      35
+##  9 Fantasy        28
+## 10 Documentary    25
+## 11 Mystery        16
+## 12 Sci-Fi          7
+## 13 Family          3
+## 14 Musical         2
+## 15 Romance         2
+## 16 Western         2
+## 17 Thriller        1</code></pre>
+<pre class="r"><code>#Create table with average gross earnings and budget
+movies %&gt;%
+  group_by(genre) %&gt;% #sort by genre
+  summarize(average_gross = mean(gross), 
+         average_budget = mean(budget),
+         return_on_budget = (average_gross/average_budget) -1) %&gt;% #create avg. variables, and return on budget variable
+  arrange(desc(return_on_budget)) #rank in descending order</code></pre>
+<pre><code>## # A tibble: 17 × 4
+##    genre       average_gross average_budget return_on_budget
+##    &lt;chr&gt;               &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;
+##  1 Musical         92084000        3189500           27.9   
+##  2 Family         149160478.      14833333.           9.06  
+##  3 Western         20821884        3465000            5.01  
+##  4 Documentary     17353973.       5887852.           1.95  
+##  5 Horror          37713738.      13504916.           1.79  
+##  6 Fantasy         42408841.      17582143.           1.41  
+##  7 Comedy          42630552.      24446319.           0.744 
+##  8 Mystery         67533021.      39218750            0.722 
+##  9 Animation       98433792.      61701429.           0.595 
+## 10 Biography       45201805.      28543696.           0.584 
+## 11 Adventure       95794257.      66290069.           0.445 
+## 12 Drama           37465371.      26242933.           0.428 
+## 13 Crime           37502397.      26596169.           0.410 
+## 14 Romance         31264848.      25107500            0.245 
+## 15 Action          86583860.      71354888.           0.213 
+## 16 Sci-Fi          29788371.      27607143.           0.0790
+## 17 Thriller            2468         300000           -0.992</code></pre>
+<pre class="r"><code>#Create table showing top 15 directors by gross revenue
+movies %&gt;%
+  group_by(director) %&gt;% #sort by director
+  summarize(average_gross = mean(gross), 
+         median_gross = median(gross),
+         std_dev_gross = sd(gross),
+          total_gross = sum(gross)) %&gt;% #create mean, median, standard deviation, and total gross revenue variables
+  arrange(desc(total_gross)) %&gt;% #arrange in descending order by total gross revenue
+  head(directors_highestgross, n=15) #only include the top 15 directors based on total gross revenue</code></pre>
+<pre><code>## # A tibble: 15 × 5
+##    director          average_gross median_gross std_dev_gross total_gross
+##    &lt;chr&gt;                     &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;       &lt;dbl&gt;
+##  1 Steven Spielberg     174524422.   164435221     101421051.  4014061704
+##  2 Michael Bay          171634041.   138396624     127161579.  2231242537
+##  3 Tim Burton           129454718.    76519172     108726924.  2071275480
+##  4 Sam Raimi            201460090.   234903076     162126632.  2014600898
+##  5 James Cameron        318287652.   175562880.    309171337.  1909725910
+##  6 Christopher Nolan    226653447    196667606.    187224133.  1813227576
+##  7 George Lucas         348283696    380262555     146193880.  1741418480
+##  8 Robert Zemeckis      124562239.   100853835      91300279.  1619309108
+##  9 Clint Eastwood        72543216.    46700000      75487408.  1378321100
+## 10 Francis Lawrence     271700394.   281666058     135437020.  1358501971
+## 11 Ron Howard           111332341    101587923      81933761.  1335988092
+## 12 Gore Verbinski       189942999.   123207194     154473822.  1329600995
+## 13 Andrew Adamson       284361730    279680930.    120895765.  1137446920
+## 14 Shawn Levy           102704635.    85463309      65484773.  1129750988
+## 15 Ridley Scott          80632686.    47775715      68812285.  1128857598</code></pre>
+<pre class="r"><code>#Create table describing ratings by genre
+movies %&gt;%
+  group_by(genre)%&gt;% #sort by genre
+  summarise(mean_rating = mean(rating), 
+            min_rating = min(rating), 
+            max_rating=max(rating), 
+            median_rating = median(rating), 
+            sd_rating = sd(rating)) %&gt;%  #create summary statistics on ratings
+  arrange(desc(mean_rating)) #arranged in descending order based on mean rating</code></pre>
+<pre><code>## # A tibble: 17 × 6
+##    genre       mean_rating min_rating max_rating median_rating sd_rating
+##    &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;
+##  1 Biography          7.11        4.5        8.9          7.2      0.760
+##  2 Crime              6.92        4.8        9.3          6.9      0.849
+##  3 Mystery            6.86        4.6        8.5          6.9      0.882
+##  4 Musical            6.75        6.3        7.2          6.75     0.636
+##  5 Drama              6.73        2.1        8.8          6.8      0.917
+##  6 Documentary        6.66        1.6        8.5          7.4      1.77 
+##  7 Sci-Fi             6.66        5          8.2          6.4      1.09 
+##  8 Animation          6.65        4.5        8            6.9      0.968
+##  9 Romance            6.65        6.2        7.1          6.65     0.636
+## 10 Adventure          6.51        2.3        8.6          6.6      1.09 
+## 11 Family             6.5         5.7        7.9          5.9      1.22 
+## 12 Action             6.23        2.1        9            6.3      1.03 
+## 13 Fantasy            6.15        4.3        7.9          6.45     0.959
+## 14 Comedy             6.11        1.9        8.8          6.2      1.02 
+## 15 Horror             5.83        3.6        8.5          5.9      1.01 
+## 16 Western            5.7         4.1        7.3          5.7      2.26 
+## 17 Thriller           4.8         4.8        4.8          4.8     NA</code></pre>
+<pre class="r"><code>#Create histogram
+ggplot(movies, aes(x=rating, fill = genre)) +
+  geom_histogram() +
+  labs(title = &quot;Ratings Distributed by Genre&quot;,
+       x=&quot;Ratings&quot;,
+       y=&quot;Count&quot;)</code></pre>
+<p><img src="/blogs/homework1_files/figure-html/ratings_bygenre-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="use-ggplot-to-answer-the-following" class="section level2">
+<h2>Use <code>ggplot</code> to answer the following</h2>
+<ul>
+<li>Examine the relationship between <code>gross</code> and <code>cast_facebook_likes</code>. Produce a scatterplot and write one sentence discussing whether the number of facebook likes that the cast has received is likely to be a good predictor of how much money a movie will make at the box office. What variable are you going to map to the Y- and X- axes?</li>
+</ul>
+<p>The number of facebook likes that a cast receives is not likely to be a good predictor of how much money a movie will make at the box office, as seen through the lack of correlation in the graph and the correlation test. Since we were testing if gross revenue is <em>dependent</em> on the number of facebook likes, gross revenue became the dependent variable (y-axis) and facebook likes became the independent variable (x-axis).</p>
+<pre class="r"><code>#Create scatterplot
+ggplot(movies, aes(x=cast_facebook_likes, y=gross)) + #assign x- and y-axis variables 
+  geom_point() +
+  geom_smooth(method=&quot;lm&quot;) +
+  scale_y_log10()+
+  scale_x_log10() + #scale axis to make graph readable
+  labs(title = &quot;Gross Revenue of Movie vs Cast Facebook Likes&quot;,
+       x=&quot;Cast Facebook Likes&quot;,
+       y=&quot;Gross Revenue&quot;) </code></pre>
+<p><img src="/blogs/homework1_files/figure-html/gross_on_fblikes-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Test correlation of variables
+cor(x=movies$cast_facebook_likes, y=movies$gross)</code></pre>
+<pre><code>## [1] 0.213</code></pre>
+<ul>
+<li>Examine the relationship between <code>gross</code> and <code>budget</code>. Produce a scatterplot and write one sentence discussing whether budget is likely to be a good predictor of how much money a movie will make at the box office.</li>
+</ul>
+<p>Through the scatterplot and correlation test we can assume that the budget can be a good predictor of how much money the movie will make. This makes sense since movies with bigger budgets tend to have more popular casts, better quality production, and more marketing campaigns.</p>
+<pre class="r"><code>#Create scatterplot
+ggplot(movies, aes(x=budget, y=gross)) + #assign x- and y-axis variables
+  geom_point() +
+  geom_smooth(method=&quot;lm&quot;) +
+  scale_y_log10()+
+  scale_x_log10() + #scale axis to make graph readable
+  labs(title = &quot;Gross Revenue of Movie vs Movie Budget&quot;,
+       x=&quot;Movie Budget&quot;,
+       y=&quot;Gross Revenue&quot;) </code></pre>
+<p><img src="/blogs/homework1_files/figure-html/gross_on_budget-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Test correlation of variables
+cor(x=movies$budget, y=movies$gross)</code></pre>
+<pre><code>## [1] 0.641</code></pre>
+<ul>
+<li>Examine the relationship between <code>gross</code> and <code>rating</code>. Produce a scatterplot, faceted by <code>genre</code> and discuss whether IMDB ratings are likely to be a good predictor of how much money a movie will make at the box office. Is there anything strange in this dataset?</li>
+</ul>
+<p>The relationship between IMDB Movie Rating and the amount of money a movie will make at the box office varies depending on genre, as seen in the scatterplots below. For some genres, like fantasy, horror, documentaries, and crime, there is seemingly no correlation of higher ratings receiving higher gross revenues. However, in some genres, like action and adventure, there is a slightly positive correlation with higher rated movies tending to attain higher amounts of success at the box office. For some genres (i.e., family and musical), there may be a positive correlation between the rating and gross profit, but there are not enough data points to come to a conclusive answer.</p>
+<pre class="r"><code>#Create graph
+ggplot(movies, aes(x=rating, y=gross)) + #Assign x- and y-axis variables
+  geom_point() +
+  geom_smooth(method=&quot;lm&quot;) +
+  labs(title = &quot;Gross Revenue of Movie vs IMDB Rating&quot;,
+       x=&quot;IMDB Movie Rating&quot;,
+       y=&quot;Gross Revenue&quot;) +
+  facet_wrap(~genre) #group scatterplots by genre</code></pre>
+<p><img src="/blogs/homework1_files/figure-html/gross_on_rating-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="returns-of-financial-stocks" class="section level1">
+<h1>Returns of financial stocks</h1>
+<pre class="r"><code>nyse &lt;- read_csv(here::here(&quot;data&quot;,&quot;nyse.csv&quot;))</code></pre>
+<pre class="r"><code>#Create table on companies per sector
+stocks &lt;- nyse %&gt;%
+  group_by(sector) %&gt;% #Group data by sector
+  summarize(count = n()) #Sort data in descending order
+
+#Create bar plot
+ggplot(stocks, aes(x=count, y=reorder(sector, count), fill=sector)) +
+  geom_bar(stat=&quot;identity&quot;) +
+  theme(legend.position=&quot;none&quot;) +
+  labs(title=&quot;Company Count by Sector&quot;, 
+       x=&quot;Number of Companies&quot;, y=&quot;Sector&quot;)</code></pre>
+<p><img src="/blogs/homework1_files/figure-html/companies_per_sector-1.png" width="648" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>djia_url &lt;- &quot;https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average&quot;
+
+
+#get tables that exist on URL
+tables &lt;- djia_url %&gt;% 
+  read_html() %&gt;% 
+  html_nodes(css=&quot;table&quot;)
+
+
+# parse HTML tables into a dataframe called djia. 
+# Use purr::map() to create a list of all tables in URL
+djia &lt;- map(tables, . %&gt;% 
+               html_table(fill=TRUE)%&gt;% 
+               clean_names())
+
+
+# constituents
+table1 &lt;- djia[[2]] %&gt;% # the second table on the page contains the ticker symbols
+  mutate(date_added = ymd(date_added),
+         
+         # if a stock is listed on NYSE, its symbol is, e.g., NYSE: MMM
+         # We will get prices from yahoo finance which requires just the ticker
+         
+         # if symbol contains &quot;NYSE*&quot;, the * being a wildcard
+         # then we jsut drop the first 6 characters in that string
+         ticker = ifelse(str_detect(symbol, &quot;NYSE*&quot;),
+                          str_sub(symbol,7,11),
+                          symbol)
+         )
+
+# we need a vector of strings with just the 30 tickers + SPY
+tickers &lt;- table1 %&gt;% 
+  select(ticker) %&gt;% 
+  pull() %&gt;% # pull() gets them as a sting of characters
+  c(&quot;SPY&quot;) # and lets us add SPY, the SP500 ETF</code></pre>
+<p>Now let us download prices for all 30 DJIA constituents and the SPY ETF that tracks SP500 since January 1, 2020</p>
+<pre class="r"><code># Notice the cache=TRUE argument in the chunk options. Because getting data is time consuming, # cache=TRUE means that once it downloads data, the chunk will not run again next time you knit your Rmd
+
+myStocks &lt;- tickers %&gt;% 
+  tq_get(get  = &quot;stock.prices&quot;,
+         from = &quot;2000-01-01&quot;,
+         to   = Sys.Date()) %&gt;% # Sys.Date() returns today&#39;s price
+  group_by(symbol) 
+
+glimpse(myStocks) # examine the structure of the resulting data frame</code></pre>
+<pre><code>## Rows: 162,049
+## Columns: 8
+## Groups: symbol [31]
+## $ symbol   &lt;chr&gt; &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;…
+## $ date     &lt;date&gt; 2000-01-03, 2000-01-04, 2000-01-05, 2000-01-06, 2000-01-07, …
+## $ open     &lt;dbl&gt; 48.0, 46.4, 45.6, 47.2, 50.6, 50.2, 50.4, 51.0, 50.7, 50.4, 4…
+## $ high     &lt;dbl&gt; 48.2, 47.4, 48.1, 51.2, 51.9, 51.8, 51.2, 51.8, 50.9, 50.5, 4…
+## $ low      &lt;dbl&gt; 47.0, 45.3, 45.6, 47.2, 50.0, 50.0, 50.2, 50.4, 50.2, 49.5, 4…
+## $ close    &lt;dbl&gt; 47.2, 45.3, 46.6, 50.4, 51.4, 51.1, 50.2, 50.4, 50.4, 49.7, 4…
+## $ volume   &lt;dbl&gt; 2173400, 2713800, 3699400, 5975800, 4101200, 3863800, 2357600…
+## $ adjusted &lt;dbl&gt; 27.2, 26.1, 26.9, 29.0, 29.6, 29.4, 28.9, 29.0, 29.0, 28.6, 2…</code></pre>
+<p>Financial performance analysis depend on returns; If I buy a stock today for 100 and I sell it tomorrow for 101.75, my one-day return, assuming no transaction costs, is 1.75%. So given the adjusted closing prices, our first step is to calculate daily and monthly returns.</p>
+<pre class="r"><code>#calculate daily returns
+myStocks_returns_daily &lt;- myStocks %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;daily&quot;, 
+               type       = &quot;log&quot;,
+               col_rename = &quot;daily_returns&quot;,
+               cols = c(nested.col))  
+
+#calculate monthly  returns
+myStocks_returns_monthly &lt;- myStocks %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;monthly&quot;, 
+               type       = &quot;arithmetic&quot;,
+               col_rename = &quot;monthly_returns&quot;,
+               cols = c(nested.col)) 
+
+#calculate yearly returns
+myStocks_returns_annual &lt;- myStocks %&gt;%
+  group_by(symbol) %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;yearly&quot;, 
+               type       = &quot;arithmetic&quot;,
+               col_rename = &quot;yearly_returns&quot;,
+               cols = c(nested.col))</code></pre>
+<pre class="r"><code>#Create table summarizing each stock and &#39;SPY&#39;
+new_table = myStocks_returns_monthly %&gt;%
+  summarise(returns_mean = mean(monthly_returns),
+            returns_median = median(monthly_returns),
+            returns_min = min(monthly_returns),
+             returns_max = max(monthly_returns),
+            returns_SD = sd(monthly_returns)) #Create columns to display summary statistics of stocks and SPY
+print(new_table)</code></pre>
+<pre><code>## # A tibble: 31 × 6
+##    symbol returns_mean returns_median returns_min returns_max returns_SD
+##    &lt;chr&gt;         &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+##  1 AAPL        0.0269         0.0352       -0.577       0.454     0.115 
+##  2 AMGN        0.00816        0.00856      -0.170       0.328     0.0732
+##  3 AXP         0.0102         0.0109       -0.279       0.875     0.0921
+##  4 BA          0.0126         0.0165       -0.458       0.459     0.0925
+##  5 CAT         0.0144         0.0141       -0.353       0.350     0.0899
+##  6 CRM         0.0262         0.0205       -0.360       0.403     0.110 
+##  7 CSCO        0.00609        0.0125       -0.367       0.389     0.0962
+##  8 CVX         0.00896        0.0108       -0.224       0.273     0.0655
+##  9 DIS         0.0104         0.00905      -0.268       0.234     0.0737
+## 10 DOW         0.0160         0.0386       -0.276       0.255     0.109 
+## # … with 21 more rows</code></pre>
+<pre class="r"><code>#Create density plot for each stock
+myStocks_returns_monthly %&gt;%
+  ggplot(aes(x=monthly_returns))+ facet_wrap(vars(symbol)) + 
+  labs(x= &quot;Monthly Returns&quot;, y=&quot;Frequency of Return&quot;) +
+  geom_density()</code></pre>
+<p><img src="/blogs/homework1_files/figure-html/density_monthly_returns-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>What can you infer from this plot? Which stock is the riskiest? The least risky?</p>
+<p>From the various density plots, it is discernible that those stocks with a wider density plot are more risky. Owing to which, in our opinion, Apple and CRM were the riskiest stocks in the observed time frame. One the other hand, SPY seems to be the least risky. This is likely because SPY is an ETF and therefore aggregates risk, unlike individual stocks.</p>
+<pre class="r"><code>#Create plot showing expected monthly returns and risk of the stocks
+new_table %&gt;%
+  ggplot(aes(x= returns_SD, y= returns_mean))+ 
+  geom_point() + 
+  ggrepel::geom_text_repel(aes(label = symbol)) + #Label stocks with tickers
+  labs(
+    title = &quot;Relationship between SD and Expected Monthly Return&quot;,
+    x = &#39;Standard Deviation of Monthly Returns&#39;,
+    y = &#39;Expected monthly Return&#39;
+  ) +
+  NULL</code></pre>
+<p><img src="/blogs/homework1_files/figure-html/risk_return_plot-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p>What can you infer from this plot? Are there any stocks which, while being riskier, do not have a higher expected return?</p>
+<p>It can be inferred that stocks with a higher risk also have a higher expected average monthly return. This follows standard economic theory - the higher the risk, the higher the return. Two stocks that stood out a bit for being relatively risky but without a corresponding higher expected return are DOW and CSCO. Both of the these names had relatively higher standard deviations, but they appeared to fall below the typical expected returns when compared to stocks with similar risk profiles.</p>
+</div>
